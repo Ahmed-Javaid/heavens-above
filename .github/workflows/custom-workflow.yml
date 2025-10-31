@@ -1,0 +1,24 @@
+name: Release Notes Generator
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  generate-release-notes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate release notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: context.payload.release.tag_name,
+            });
+            console.log(`Release: ${release.name}`);
+            console.log(`Body: ${release.body}`);

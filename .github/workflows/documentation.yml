@@ -1,0 +1,28 @@
+name: Documentation Deployment
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - '*.md'
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build documentation
+        run: |
+          mkdir public
+          cp -r docs/* public/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
