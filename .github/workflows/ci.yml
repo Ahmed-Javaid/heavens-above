@@ -20,7 +20,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm ci # Use npm ci for clean, fast, reproducible installs
+        run: npm install # Install dependencies and generate package-lock.json
 
       - name: Run Linter
         run: npm run lint --if-present # Runs linting if the script exists
