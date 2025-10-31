@@ -1,6 +1,24 @@
 version: 2
 updates:
+  # Check for npm dependency updates 
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/" # Location of package.json 
+    schedule:
+      interval: "daily" # Check for updates every day
+    # Add reviewers to the PRs
+    reviewers:
+      - "YOUR-GITHUB-USERNAME" # <-- REPLACE THIS
+    commit-message:
+      prefix: "deps"
+    # Group minor and patch updates into a single PR
+    groups:
+      npm-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Also check for GitHub Actions updates
+  - package-ecosystem: "github-actions"
+    directory: "/" # Location of workflow files
     schedule:
       interval: "weekly"

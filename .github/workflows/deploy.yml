@@ -1,31 +1,37 @@
-name: Deployment Pipeline
+name: Deployment Pipeline (Heroku)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ] # Triggers on push to main, after CI (ideally)
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
+      # Stage 1: Build & Test (Combined) 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install, Build, and Test
+        run: |
+          npm install
+          # No build step in package.json, so we skip it.
+          # Add 'npm test' here if you have a test script.
+          echo "Build and Test stage complete."
 
-      - name: Build project
-        run: npm run build --if-present
-
+      # Stage 2: Deploy 
       - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v4.1.9
+        uses: akhileshns/heroku-deploy@v3.12.14
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: "your-heroku-app-name" # <-- REPLACE THIS
+          heroku_email: "your-email@example.com" # <-- REPLACE THIS
+        env:
+          # This project needs a "start" script in package.json for Heroku.
+          # Add: "start": "node run.js"
+          HD_PROCFILE: "web: node run.js"

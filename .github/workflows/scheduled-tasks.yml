@@ -1,19 +1,28 @@
-name: Scheduled Maintenance
+name: Scheduled Tasks
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # every midnight
-  workflow_dispatch:
+    # Runs "at 05:00 UTC every day" 
+    - cron: '0 5 * * *'
 
 jobs:
-  maintenance:
+  run-daily-task:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run maintenance script
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Daily Task
         run: |
-          echo "Performing daily maintenance..."
-          npm run clean || echo "No clean script found."
+          echo "Running a simulated daily task, like a data backup or health check..."
+          # In a real app, you might run a script:
+          # npm run backup-database
+          echo "Daily task complete."

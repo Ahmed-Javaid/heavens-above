@@ -1,24 +1,39 @@
-name: Release Notes Generator
+name: Create Release
 
 on:
-  release:
-    types: [published]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
 
 jobs:
-  generate-release-notes:
+  create-release:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write # Required to create a release
+      
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Generate release notes
-        uses: actions/github-script@v7
+      - name: Build and Zip Release Asset
+        run: |
+          npm install
+          # This command zips the essential app files into a package
+          zip -r heavens-above-app.zip public/ src/ package.json run.js README.md
+          
+      - name: Create Release and Upload Asset
+        # This popular action creates the release and uploads the asset in one step
+        uses: ncipollo/release-action@v1
         with:
-          script: |
-            const { data: release } = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: context.payload.release.tag_name,
-            });
-            console.log(`Release: ${release.name}`);
-            console.log(`Body: ${release.body}`);
+          # The file(s) to upload as assets
+          artifacts: "heavens-above-app.zip"
+          # The GITHUB_TOKEN is automatically provided by GitHub
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use the version number provided during manual trigger
+          tag: ${{ github.event.inputs.version }}
+          name: "Release ${{ github.event.inputs.version }}"
+          # Automatically generates release notes 
+          generateReleaseNotes: true
