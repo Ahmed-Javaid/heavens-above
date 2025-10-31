@@ -1,24 +1,15 @@
 version: 2
 updates:
-  # Check for npm dependency updates 
   - package-ecosystem: "npm"
-    directory: "/" # Location of package.json 
+    directory: "/"
     schedule:
-      interval: "daily" # Check for updates every day
-    # Add reviewers to the PRs
+      interval: "daily"
     reviewers:
       - "Ahmed-Javaid"
     commit-message:
       prefix: "deps"
-    # Group minor and patch updates into a single PR
-    groups:
-      npm-minor-patch:
-        update-types:
-          - "minor"
-          - "patch"
 
-  # Also check for GitHub Actions updates
   - package-ecosystem: "github-actions"
-    directory: "/" # Location of workflow files
+    directory: "/"
     schedule:
       interval: "weekly"

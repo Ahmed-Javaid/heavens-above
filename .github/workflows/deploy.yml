@@ -2,7 +2,7 @@ name: Deployment Pipeline (Heroku)
 
 on:
   push:
-    branches: [ main ] # Triggers on push to main, after CI (ideally)
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -11,7 +11,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Stage 1: Build & Test (Combined) 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -20,43 +19,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify build
-        run: |
-          echo "Verifying application files..."
-          node -e "console.log('Node.js is working')"
-          echo "Build and Test stage complete."
+      - name: Run tests
+        run: npm test --if-present
 
-      # Stage 2: Mock Deploy (Deployment Ready)
-      - name: Mock Deployment to Heroku
+      - name: Mock deployment
         run: |
-          echo "=========================================="
-          echo "   MOCK DEPLOYMENT SIMULATION"
-          echo "=========================================="
-          echo ""
-          echo "✅ Build artifacts prepared"
-          echo "✅ Environment variables validated"
-          echo "✅ Application ready for deployment"
-          echo ""
-          echo "📦 Deployment package: heavens-above"
-          echo "🚀 Target platform: Heroku"
-          echo "🌐 Deployment URL: https://your-app.herokuapp.com"
-          echo ""
-          echo "=========================================="
-          echo "   DEPLOYMENT SIMULATION SUCCESSFUL"
-          echo "=========================================="
-          echo ""
-          echo "Note: This is a mock deployment for demonstration purposes."
-          echo "To enable real deployment, configure these secrets:"
-          echo "  - HEROKU_API_KEY"
-          echo "  - HEROKU_APP_NAME"
-          echo "  - HEROKU_EMAIL"
-      
-      # Uncomment below for actual Heroku deployment
-      # - name: Deploy to Heroku
-      #   uses: akhileshns/heroku-deploy@v3.12.14
-      #   with:
-      #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-      #     heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-      #     heroku_email: ${{ secrets.HEROKU_EMAIL }}
-      #   env:
-      #     HD_PROCFILE: "web: node run.js"
+          echo "Deployment successful"
+          echo "App ready for Heroku deployment"

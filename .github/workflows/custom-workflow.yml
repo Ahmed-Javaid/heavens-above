@@ -1,7 +1,6 @@
 name: Create Release
 
 on:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       version:
@@ -12,28 +11,21 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to create a release
-      
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build and Zip Release Asset
+      - name: Create release package
         run: |
           npm install
-          # This command zips the essential app files into a package
-          zip -r heavens-above-app.zip public/ src/ package.json run.js README.md
+          zip -r release.zip public/ src/ package.json run.js README.md
           
-      - name: Create Release and Upload Asset
-        # This popular action creates the release and uploads the asset in one step
+      - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          # The file(s) to upload as assets
-          artifacts: "heavens-above-app.zip"
-          # The GITHUB_TOKEN is automatically provided by GitHub
+          artifacts: "release.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
-          # Use the version number provided during manual trigger
           tag: ${{ github.event.inputs.version }}
           name: "Release ${{ github.event.inputs.version }}"
-          # Automatically generates release notes 
           generateReleaseNotes: true

@@ -9,7 +9,6 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,10 +19,10 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install # Install dependencies and generate package-lock.json
+        run: npm install
 
-      - name: Run Linter
-        run: npm run lint --if-present # Runs linting if the script exists
+      - name: Run linter
+        run: npm run lint --if-present
 
-      - name: Run Tests
-        run: npm test --if-present # Runs the project tests if available
+      - name: Run tests
+        run: npm test --if-present
