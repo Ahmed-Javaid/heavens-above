@@ -1,15 +1,18 @@
-name: Scheduled Tasks
+name: Scheduled Maintenance
 
 on:
   schedule:
-    # Runs "at 05:00 UTC every day" 
-    - cron: '0 5 * * *'
+    # Runs at 00:00 UTC every day
+    - cron: '0 0 * * *'
+  # Allows manual triggering from the GitHub Actions UI
+  workflow_dispatch:
 
 jobs:
-  run-daily-task:
+  maintenance:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -17,12 +20,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci # Use npm ci
 
-      - name: Run Daily Task
+      - name: Run maintenance script
         run: |
-          echo "Running a simulated daily task, like a data backup or health check..."
-          # In a real app, you might run a script:
-          # npm run backup-database
-          echo "Daily task complete."
+          echo "Starting daily maintenance job..."
+          # Add maintenance tasks here when needed
+          echo "Maintenance tasks completed successfully."

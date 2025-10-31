@@ -2,10 +2,12 @@ name: CI (Build and Test)
 
 on:
   push:
-    branches: [ main ] # Triggers on push to the main branch 
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,23 +17,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Use a current Node.js LTS version
+          node-version: '20'
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci # Use npm ci for clean, fast, reproducible installs
 
-      # NOTE: The heavens-above repo doesn't have a lint script.
-      # You can add one to package.json, e.g., "lint": "eslint src/**"
-      # For this assignment, we'll create a placeholder step.
+      - name: Run Linter
+        run: npm run lint --if-present # Runs linting if the script exists
 
-        run: echo "Skipping linting step as no 'npm run lint' script is defined."
-        # To make this a real step, add a lint script to package.json and change this line to:
-        # run: npm run lint
-
-      # NOTE: The heavens-above repo doesn't have a test script.
-      # You can add one, e.g., using Jest.
-      # For this assignment, we'll create a placeholder step.
       - name: Run Tests
-        run: echo "Skipping tests as no 'npm test' script is defined."
-        # To make this a real step, add a test script to package.json and change this line to:
-        # run: npm test
+        run: npm test --if-present # Runs the project tests if available
