@@ -3,8 +3,9 @@ name: Deploy Documentation to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'docs/**' # Only run if files in the /docs folder change 
+    # Remove path filter to allow workflow to run
+    # paths:
+    #   - 'docs/**'
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,6 +22,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Create docs directory if not exists
+        run: |
+          if [ ! -d "docs" ]; then
+            echo "Creating docs directory..."
+            mkdir -p docs
+            echo "# Heavens Above Documentation" > docs/index.md
+            echo "" >> docs/index.md
+            echo "Welcome to the Heavens Above project documentation." >> docs/index.md
+            echo "" >> docs/index.md
+            echo "## About" >> docs/index.md
+            echo "This project scrapes satellite tracking data from Heavens Above." >> docs/index.md
+          fi
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4

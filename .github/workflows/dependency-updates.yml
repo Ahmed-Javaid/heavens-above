@@ -3,6 +3,9 @@ name: Dependency Updates
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [ main ]  # Added to allow workflow runs
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   test-updates:
